@@ -1,17 +1,19 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { getFunName } from '../helpers';
 
 class StorePicker extends React.Component {
     myInput = React.createRef();
 
+    static propTypes = {
+        history: PropTypes.object
+    };
+
     goToStore = event => {
-        console.log(event);
-        
         event.preventDefault();
         console.log(this.myInput.current.value);
         const storeName = this.myInput.current.value;
         this.props.history.push(`/store/${storeName}`);
-        
     }
     render() {
         return (

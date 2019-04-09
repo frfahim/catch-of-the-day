@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Header from './Header';
 import Inventory from './Inventory';
 import Order from './Order';
@@ -12,6 +13,9 @@ class App extends React.Component {
         order: {},
     };
 
+    static propTypes = {
+        match: PropTypes.object
+    };
 
     componentDidMount() {
         const { params } = this.props.match;
@@ -48,6 +52,12 @@ class App extends React.Component {
         this.setState({ fishes })
     };
 
+    deleteFish = (key) => {
+        const fishes = { ...this.state.fishes };
+        fishes[key] = null;
+        this.setState({ fishes })
+    };
+
     loadSampleFishes = sample => {
         this.setState({ fishes: samples})
     };
@@ -55,6 +65,12 @@ class App extends React.Component {
     addToOrder = (key) => {
         const order  = { ...this.state.order }
         order[key] = order[key] + 1 || 1;
+        this.setState({order}) // this.setState({order: order})
+    };
+
+    removeFromOrder = (key) => {
+        const order  = { ...this.state.order }
+        delete order[key];
         this.setState({order}) // this.setState({order: order})
     }
 
@@ -74,12 +90,18 @@ class App extends React.Component {
                         ))}
                     </ul>
                 </div>
-                <Order order={this.state.order} fishes={this.state.fishes}/>
+                <Order
+                    order={this.state.order}
+                    fishes={this.state.fishes}
+                    removeFromOrder={this.removeFromOrder}
+                />
                 <Inventory
                     addFish={this.addFish}
                     updateFish={this.updateFish}
+                    deleteFish={this.deleteFish}
                     fishes={this.state.fishes}
                     loadSampleFishes={this.loadSampleFishes}
+                    storeId={this.props.match.params.storeId}
                 />
             </div>
         );
